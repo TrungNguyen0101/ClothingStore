@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import React from 'react';
+import Link from 'next/link';
 
-const Error404 = () => {
+function Error404() {
   return (
     <section className="xl:pt-[80px] pt-[40px] xl:px-0 px-[20px] ">
       <div className="container p-0">
@@ -13,10 +13,10 @@ const Error404 = () => {
           </span>
           <span className="flex text-[#999999] gap-x-[12px] mr-[12px]">
             <span>/</span>
-            <span className=" text-black">404 Error</span>
+            <span className="text-black ">404 Error</span>
           </span>
         </div>
-        <div className="flex items-center flex-col justify-center">
+        <div className="flex flex-col items-center justify-center">
           <div className="mx-auto text-center inline-block md:mb-[80px] mb-[40px]">
             <h1 className="xl:text-[110px] md:text-[80px] text-[60px] xl:leading-[115px] leading-[70px] font-inter font-medium mb-[40px]">
               404 Not Found
@@ -38,6 +38,6 @@ const Error404 = () => {
       </div>
     </section>
   );
-};
+}
 
 export default Error404;

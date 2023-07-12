@@ -1,7 +1,8 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
+import PropTypes from 'prop-types';
 
-const InputCheckBoxRHF = ({ name = '', children, control, ...props }) => {
+function InputCheckBoxRHF({ name = '', children, control, ...props }) {
   const { field } = useController({
     control,
     name,
@@ -21,6 +22,19 @@ const InputCheckBoxRHF = ({ name = '', children, control, ...props }) => {
       </label>
     </div>
   );
+}
+InputCheckBoxRHF.propTypes = {
+  name: PropTypes.string,
+  children: PropTypes.node,
+  control: PropTypes.string,
+  req: PropTypes.string,
+  className: PropTypes.string,
 };
-
+InputCheckBoxRHF.defaultProps = {
+  name: null,
+  children: null,
+  control: null,
+  req: null,
+  className: null,
+};
 export default InputCheckBoxRHF;

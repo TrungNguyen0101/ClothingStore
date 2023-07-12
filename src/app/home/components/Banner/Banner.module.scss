@@ -1,0 +1,35 @@
+.bannerItem {
+  display: inline-block;
+  line-height: 24px;
+  &_link {
+    span {
+      color: white;
+    }
+    text-decoration: none !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to right, #f13030 50%, rgb(11, 11, 21) 50%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: 100%;
+    transition: background-position 400ms ease;
+    text-decoration: none;
+    &:hover {
+      background-position: 0 100%;
+    }
+  }
+  &:hover {
+    .childCategory {
+      transition: all 0.5s ease;
+      opacity: 1;
+    }
+  }
+}
+.childCategory {
+  opacity: 0;
+}

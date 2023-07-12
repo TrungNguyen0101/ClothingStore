@@ -1,18 +1,22 @@
-import React from 'react';
-import Image from 'next/image';
-import SliderBanner from '@/components/SliderBanner';
-import './Banner.scss';
-import BannerCategory from './BannerCategory';
-const Banner = () => {
-  return (
-    <section className="container overflow-hidden banner">
-      <div className="lg:flex-row banner_container md:flex-col ">
-        <BannerCategory />
+import React, { lazy, memo } from 'react';
+import PropTypes from 'prop-types';
 
-        <SliderBanner />
+import BannerCategory from './BannerCategory';
+
+const SliderBanner = lazy(() => import('@/components/SliderBanner'));
+
+function Banner({ data, category }) {
+  return (
+    <section className="container px-0 overflow-hidden banner">
+      <div className=" lg:flex-row  flex-col flex items-stretch gap-x-[45px]">
+        <BannerCategory category={category} />
+        <SliderBanner data={data} />
       </div>
     </section>
   );
+}
+Banner.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.objectOf).isRequired,
+  category: PropTypes.arrayOf(PropTypes.objectOf).isRequired,
 };
-
-export default Banner;
+export default memo(Banner);

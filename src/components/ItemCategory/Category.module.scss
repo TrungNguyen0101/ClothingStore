@@ -1,0 +1,17 @@
+.categoryItem {
+  &:hover {
+    background-color: #db4444;
+    color: white;
+    path {
+      stroke: white;
+    }
+  }
+  &-text {
+    display: -webkit-box;
+    line-height: 1.3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

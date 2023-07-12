@@ -1,8 +1,9 @@
-import TagProduct from '@/components/TagProduct';
+import React, { lazy, memo } from 'react';
 import Image from 'next/image';
-import React from 'react';
 
-const Feature = () => {
+const TagProduct = lazy(() => import('@/components/TagProduct'));
+
+function Feature() {
   return (
     <section className="feature xl:mt-[140px] lg:mt-[70px] md:mt-[50px] mt-[20px]">
       <div className="container px-0 ">
@@ -10,12 +11,13 @@ const Feature = () => {
         <div className="grid lg:grid-cols-2 grid-cols-1 md:mt-[60px] mt-[30px] lg:gap-x-[30px] ">
           <div className="relative">
             <Image
-              src="/image/feature_1.png"
+              src="/image/HomeImage/feature_1.png"
               width="0"
               height="0"
               sizes="100vw"
+              quality={80}
               style={{ width: '100%', height: 'auto' }}
-              alt=""
+              alt="feature_1"
               className="object-cover w-full md:h-[400px] lg:h-full h-[300px] object-bottom"
             />
             <div className="text-white absolute left-[32px] bottom-[32px] max-w-[242px]">
@@ -26,7 +28,7 @@ const Feature = () => {
                 Black and White version of the PS5 coming out on sale.
               </span>
               <a
-                href="#"
+                href="/"
                 className="inline-block text-[16px] text-white no-underline border-b-[1px] hover:opacity-70 duration-200"
               >
                 <span>Shop Now</span>
@@ -36,12 +38,13 @@ const Feature = () => {
           <div className="">
             <div className="relative lg:mt-0 sm:mt-[30px] mt-[15px]">
               <Image
-                src="/image/feature_2.png"
+                src="/image/HomeImage/feature_2.png"
                 width="0"
                 height="0"
                 sizes="100vw"
+                quality={80}
                 style={{ width: '100%', height: 'auto' }}
-                alt=""
+                alt="feature_1"
                 className="w-full "
               />
               <div className="text-white absolute left-[32px] sm:bottom-[32px] bottom-[20px] max-w-[242px]">
@@ -52,7 +55,7 @@ const Feature = () => {
                   Featured woman collections that give you another vibe.
                 </span>
                 <a
-                  href="#"
+                  href="/"
                   className="inline-block text-[16px] text-white no-underline border-b-[1px] hover:opacity-70 duration-200"
                 >
                   <span>Shop Now</span>
@@ -62,12 +65,13 @@ const Feature = () => {
             <div className="grid grid-cols-2 sm:mt-[32px] mt-[15px] sm:gap-x-[30px] gap-x-[15px]">
               <div className="relative">
                 <Image
-                  src="/image/feature_2.1.png"
+                  src="/image/HomeImage/feature_2.1.png"
                   width="0"
                   height="0"
                   sizes="100vw"
+                  quality={80}
                   style={{ width: '100%', height: 'auto' }}
-                  alt=""
+                  alt="feature_1"
                   className="object-cover h-full"
                 />
                 <div className="text-white absolute sm:left-[32px] left-[10px] sm:bottom-[32px] bottom-[10px] xl:max-w-[191px] lg:max-w-[120px]">
@@ -78,7 +82,7 @@ const Feature = () => {
                     Amazon wireless speakers
                   </span>
                   <a
-                    href="#"
+                    href="/"
                     className="inline-block sm:text-[16px] text-[14px] text-white no-underline border-b-[1px] hover:opacity-70 duration-200"
                   >
                     <span>Shop Now</span>
@@ -87,12 +91,13 @@ const Feature = () => {
               </div>
               <div className="relative">
                 <Image
-                  src="/image/feature_2.2.png"
+                  src="/image/HomeImage/feature_2.2.png"
                   width="0"
                   height="0"
                   sizes="100vw"
+                  quality={80}
                   style={{ width: '100%', height: 'auto' }}
-                  alt=""
+                  alt="feature_1"
                   className="object-cover h-full"
                 />
                 <div className="text-white absolute sm:left-[32px] left-[10px] sm:bottom-[32px] bottom-[10px] xl:max-w-[191px] lg:max-w-[120px]">
@@ -103,7 +108,7 @@ const Feature = () => {
                     GUCCI INTENSE OUD EDP
                   </span>
                   <a
-                    href="#"
+                    href="/"
                     className="inline-block sm:text-[16px] text-[14px] text-white no-underline border-b-[1px] hover:opacity-70 duration-200"
                   >
                     <span>Shop Now</span>
@@ -116,6 +121,6 @@ const Feature = () => {
       </div>
     </section>
   );
-};
+}
 
-export default Feature;
+export default memo(Feature);

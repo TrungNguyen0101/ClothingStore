@@ -1,51 +1,51 @@
 'use client';
-import { inter } from '@/app/layout';
+
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
-import './Music.scss';
-const Music = () => {
-  const [dayLeft, setDayLeft] = useState(null);
-  const [hours, setHours] = useState(null);
-  const [minutes, setMinutes] = useState(null);
-  const [seconds, setSeconds] = useState(null);
+function Music({ date }) {
+  const [dayLeft, setDayLeft] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const updateCountdown = useCallback(() => {
+    const now = new Date();
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
+    const currentDay = now.getDay(); // Lấy ngày trong tuần (0: Chủ nhật, 1-6: Thứ 2 - Thứ 7)
+    const daysInWeek = 7;
+    const daysRemaining = daysInWeek - currentDay;
+    setDayLeft(daysRemaining);
 
-      const currentDay = now.getDay(); // Lấy ngày trong tuần (0: Chủ nhật, 1-6: Thứ 2 - Thứ 7)
-      const daysInWeek = 7;
-      const daysRemaining = daysInWeek - currentDay;
-      setDayLeft(daysRemaining);
+    const hours1 = now.getHours();
+    const newHousr = 24 - hours1;
+    setHours(newHousr < 10 ? `0${newHousr}` : newHousr);
 
-      const hours = now.getHours();
-      const newHousr = 24 - hours;
-      setHours(newHousr < 10 ? `0${newHousr}` : newHousr);
+    const minutes1 = now.getMinutes();
+    const newMinutes = 60 - minutes1;
+    setMinutes(newMinutes < 10 ? `0${newMinutes}` : newMinutes);
 
-      const minutes = now.getMinutes();
-      const newMinutes = 60 - minutes;
-      setMinutes(newMinutes < 10 ? `0${newMinutes}` : newMinutes);
-
-      const seconds = now.getSeconds();
-      const newSeconds = 60 - seconds;
-      setSeconds(newSeconds < 10 ? `0${newSeconds}` : newSeconds);
-    };
-    // Cập nhật thời gian đếm ngược mỗi giây
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    const seconds1 = now.getSeconds();
+    const newSeconds = 60 - seconds1;
+    setSeconds(newSeconds < 10 ? `0${newSeconds}` : newSeconds);
   }, []);
+  useEffect(() => {
+    if (date === true) {
+      updateCountdown();
+      const interval = setInterval(updateCountdown, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+    return undefined;
+  }, [date, updateCountdown]);
   return (
-    <section
-      className={`container music lg:pt-[69px] lg:pb-[69px] lg:px-[60px] sm:py-[30px] sm:px-[40px] lg:flex-row flex-col py-[10px] px-[10px] xl:mt-[140px] lg:mt-[70px] md:mt-[50px] mt-[20px]`}
-    >
-      <div className="text-white music_item ">
-        <h4 className="text-[#00FF66] font-semibold leading-[20px] text-[16px] m-0">
+    <section className="container lg:pt-[69px] lg:pb-[69px] lg:px-[60px] sm:py-[30px] sm:px-[40px] lg:flex-row flex-col py-[10px] px-[10px] xl:mt-[140px] lg:mt-[70px] md:mt-[50px] mt-[20px] flex items-center justify-between bg-black">
+      <div className="text-white lg:w-[48%] w-full ">
+        <h1 className="text-[#00FF66] font-semibold leading-[20px] text-[16px] m-0">
           Categories
-        </h4>
+        </h1>
         <h2 className="lg:text-[48px] md:text-[37px] font-semibold lg:leading-[60px] leading-[40px] lg:tracking-[0.04em] tracking-[0.02em] whitespace-pre-wrap mx-0 mt-[32px] font-inter">
           Enhance Your Music Experience
         </h2>
@@ -75,18 +75,27 @@ const Music = () => {
         </div>
         <div>
           <button
+            aria-label="buy"
             type="button"
-            className="btn btn-danger bg-[#00FF66]  mt-[40px] font-medium hover:bg-[#f56666] "
+            className="btn  bg-[#00FF66]  mt-[40px] font-medium hover:bg-[#f56666] duration-300 "
           >
             Buy Now!
           </button>
         </div>
       </div>
       <div className="music_image">
-        <Image src="/image/Loa.png" alt="" width={500} height={500} />
+        <Image
+          src="/image/HomeImage/Loa.png"
+          alt="Loa"
+          width={500}
+          height={500}
+        />
       </div>
     </section>
   );
+}
+Music.propTypes = {
+  date: PropTypes.bool.isRequired,
 };
 
-export default Music;
+export default memo(Music);

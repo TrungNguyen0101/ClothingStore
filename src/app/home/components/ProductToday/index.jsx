@@ -1,30 +1,63 @@
-'use client'; // This is a client component
+'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import SwiperCore, { Pagination, Navigation } from 'swiper';
+import React, {
+  lazy,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import Placeholder from 'react-placeholder';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+// import ItemProduct from '@/components/ItemProduct';
+// import TagProduct from '@/components/TagProduct';
+import Next from '@/svgs/HomeSVG/Next.svg';
+import Prev from '@/svgs/HomeSVG/Prev.svg';
+
 import 'swiper/swiper-bundle.min.css';
 import 'swiper/swiper.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-
-import TagProduct from '@/components/TagProduct';
-import ItemProduct from '@/components/ItemProduct';
-import Prev from '@/svgs/Prev.svg';
-import Next from '@/svgs/Next.svg';
-
 import '../styledHome/Product.scss';
 
-SwiperCore.use([Navigation, Pagination]);
+const ItemProduct = lazy(() => import('@/components/ItemProduct'));
+const TagProduct = lazy(() => import('@/components/TagProduct'));
 
-const ProductToday = () => {
+function ProductToday({ data, date }) {
+  const result = data.filter((item) => item.discountType === 'PERCENT');
+
   const swiperRef = useRef(null);
   const [activeButtonPrev, setActiveButtonPrev] = useState(true);
   const [activeButtonNext, setActiveButtonNext] = useState(false);
-  const [slidesPerView, setSlidesPerView] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const handlePrevClick = () => {
+  const breakpointsSwiper = useMemo(
+    () => ({
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 5,
+      },
+      480: {
+        slidesPerView: 2,
+        spaceBetween: 15,
+      },
+
+      768: {
+        slidesPerView: 3,
+        spaceBetween: 15,
+      },
+      992: {
+        slidesPerView: 4,
+        spaceBetween: 30,
+      },
+    }),
+    []
+  );
+
+  const handlePrevClick = useCallback(() => {
     if (swiperRef?.current && swiperRef?.current?.swiper) {
       const activeIndex = swiperRef?.current?.swiper.activeIndex;
       if (activeIndex === 1) {
@@ -33,33 +66,41 @@ const ProductToday = () => {
       setActiveButtonNext(false);
       swiperRef?.current?.swiper.slidePrev();
     }
-  };
+  }, []);
 
-  const handleNextClick = () => {
+  const handleNextClick = useCallback(() => {
     if (swiperRef?.current && swiperRef?.current?.swiper) {
+      const slidesPerViewTotal = swiperRef.current.swiper.params.slidesPerView;
       const slides = swiperRef?.current?.swiper.slides.length;
       const activeIndex = swiperRef?.current?.swiper.activeIndex;
-      if (activeIndex === slides - 1 - slidesPerView) {
+      if (activeIndex === slides - 1 - slidesPerViewTotal) {
         setActiveButtonNext(true);
       }
       setActiveButtonPrev(false);
       swiperRef?.current?.swiper.slideNext();
     }
-  };
+  }, []);
+
+  const handleLoad = useCallback(() => {
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    if (swiperRef?.current && swiperRef?.current?.swiper) {
-      const slidesPerView = swiperRef.current.swiper.params.slidesPerView;
-      setSlidesPerView(slidesPerView);
-    }
-  }, []);
+    handleLoad();
+    window.addEventListener('load', handleLoad);
+    return () => {
+      window.removeEventListener('load', handleLoad);
+    };
+  }, [handleLoad]);
   return (
-    <section className="product product_today lg:mt-[140px] md:mt-[70px] sm:mt-[30px] mt-[20px]">
+    <section className="mb-[60px] duration-300 xl:overflow-hidden lg:mt-[140px] md:mt-[70px] sm:mt-[30px] mt-[20px]">
       <div className="container px-0">
         <div className="relative sm:mb-[31px] mb-[50px]">
-          <TagProduct day={true} mt={true} text="Today’s" desc="Flash Sales" />
+          <TagProduct day={date} mt text="Today’s" desc="Flash Sales" />
           <div className="btn_click sm:bottom-0 bottom-[-30px]">
             <button
+              aria-label="prev"
+              type="button"
               className={classNames('md:p-[11px] sm:p-[5px] p-[5px]', {
                 'active-button': activeButtonPrev === true,
               })}
@@ -72,6 +113,8 @@ const ProductToday = () => {
               />
             </button>
             <button
+              aria-label="next"
+              type="button"
               className={classNames('md:p-[11px] sm:p-[5px] p-[5px]', {
                 'active-button': activeButtonNext === true,
               })}
@@ -85,60 +128,70 @@ const ProductToday = () => {
             </button>
           </div>
         </div>
-        <Swiper
-          className="slide_list"
-          ref={swiperRef}
-          spaceBetween={30}
-          slidesPerView={4}
-          modules={[Navigation, Pagination]}
-          pagination={{ clickable: true }}
-          breakpoints={{
-            // when window width is >= 640px
-            320: {
-              slidesPerView: 1,
-              spaceBetween: 5,
-            },
-            480: {
-              slidesPerView: 2,
-              spaceBetween: 15,
-            },
 
-            768: {
-              slidesPerView: 3,
-              spaceBetween: 15,
-            },
-            992: {
-              slidesPerView: 4,
-              spaceBetween: 30,
-            },
-          }}
-          // onSwiper={(swiper) => console.log(swiper)}
+        <Placeholder
+          ready={!loading}
+          rows={5}
+          customPlaceholder={
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 mb:grid-cols-2 grid-cols-1 gap-x-[30px]">
+              <div className="xl:max-w-[270px] ">
+                <div className="w-full h-[250px]  bg-slate-300  opacity-90" />
+                <div className="mt-[16px] h-[72px] w-full bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[24px] w-[40%] bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[20px] w-[70%] bg-slate-300  opacity-90" />
+              </div>
+              <div className="xl:max-w-[270px] mb:inline-block hidden">
+                <div className="w-full h-[250px]  bg-slate-300  opacity-90" />
+                <div className="mt-[16px] h-[72px] w-full bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[24px] w-[40%] bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[20px] w-[70%] bg-slate-300  opacity-90" />
+              </div>
+              <div className="xl:max-w-[270px] md:inline-block hidden">
+                <div className="w-full h-[250px]  bg-slate-300  opacity-90" />
+                <div className="mt-[16px] h-[72px] w-full bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[24px] w-[40%] bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[20px] w-[70%] bg-slate-300  opacity-90" />
+              </div>
+              <div className="xl:max-w-[270px] lg:inline-block hidden">
+                <div className="w-full h-[250px]  bg-slate-300  opacity-90" />
+                <div className="mt-[16px] h-[72px] w-full bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[24px] w-[40%] bg-slate-300  opacity-90" />
+                <div className="mt-[8px] h-[20px] w-[70%] bg-slate-300  opacity-90" />
+              </div>
+            </div>
+          }
         >
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ItemProduct sale={true} />
-          </SwiperSlide>
-        </Swiper>
+          <Swiper
+            className="xl:overflow-visible"
+            ref={swiperRef}
+            spaceBetween={30}
+            slidesPerView={4}
+            shouldSwiperUpdate
+            breakpoints={breakpointsSwiper}
+          >
+            {result?.length > 0 &&
+              result.map((item) => (
+                <SwiperSlide key={item._id}>
+                  <ItemProduct
+                    sale
+                    id={item._id}
+                    variants={item.variants}
+                    slug={item.slug}
+                    discount={item.discount}
+                    discountType={item.discountType}
+                    discountedPrice={item.discountedPrice}
+                    title={item.name}
+                    image={item.cover}
+                    price={item.price}
+                  />
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        </Placeholder>
+
         <div className="flex items-center justify-center lg:mt-[60px] md:mt-[30px] mt-[20px]">
           <button type="button" className="btn-styled btn btn-danger">
-            <a href="#" className="text-white no-underline">
+            <a href="/" className="text-white no-underline">
               View All Products
             </a>
           </button>
@@ -146,6 +199,11 @@ const ProductToday = () => {
       </div>
     </section>
   );
+}
+
+ProductToday.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.objectOf).isRequired,
+  date: PropTypes.bool.isRequired,
 };
 
-export default ProductToday;
+export default memo(ProductToday);
